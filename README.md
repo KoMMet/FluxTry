@@ -16,6 +16,7 @@ Fluxを試したいやつ
 
 3をやると下のボックスに本のタイトルと読書時間がでる
 
+https://github.com/KoMMet/FluxTry/blob/master/doc/img/trymain.PNG
 
 ### TextEditorとかいうプロジェクト名
 
