@@ -18,6 +18,10 @@ Fluxを試したいやつ
 
 ![img](https://github.com/KoMMet/FluxTry/blob/master/doc/img/trymain.PNG "img")
 
+### Fluxなのか
+
+Fluxなるものを初めて書いたので正しいかわからない  
+多分MVVM＋Fluxになっていると思う
 
 ### TextEditorとかいうプロジェクト名
 
