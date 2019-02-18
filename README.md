@@ -21,7 +21,7 @@ Fluxを試したいやつ
 ### Fluxなのか
 
 Fluxなるものを初めて書いたので正しいかわからない  
-多分MVVM＋Fluxになっていると思う
+多分MVVM＋Fluxになっていると思う  
 設計図
 ![img](https://github.com/KoMMet/FluxTry/blob/master/doc/img/diagram.PNG "img")
 
