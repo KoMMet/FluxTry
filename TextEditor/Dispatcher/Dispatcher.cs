@@ -5,7 +5,7 @@ namespace TextEditor.Dispatcher
 {
     public class Dispatcher
     {
-        public System.Action<ReadingBookAction> Action;
+        public Action<ReadingBookAction> Action;
         
         public void Dispatch(ActionType type, string title)
         {

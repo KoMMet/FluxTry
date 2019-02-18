@@ -18,7 +18,7 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="listBox" ItemsSource="{x:Bind vm.ReadingBookList,Mode=TwoWay}" Grid.Row="1">
+        <ListBox ItemsSource="{x:Bind vm.ReadingBookList,Mode=TwoWay}" Grid.Row="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -39,8 +39,9 @@
                 VerticalAlignment="Stretch" 
                 Content="{x:Bind vm.ButtonText2}"
                 Command="{x:Bind vm.EndCommand}"/>
-            <StackPanel Orientation="Horizontal" >
+            <StackPanel Orientation="Horizontal">
                 <TextBox
+                    Width="600"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Text="{x:Bind vm.BookTitle ,Mode=TwoWay}"/>

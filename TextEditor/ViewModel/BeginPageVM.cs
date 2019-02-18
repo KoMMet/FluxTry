@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using TextEditor.Action;
 using TextEditor.model;
@@ -15,8 +17,8 @@ namespace TextEditor.ViewModel
         public string ButtonText1 { get; set; } = "Begin";
         public string ButtonText2 { get; set; } = "End";
         public string BookTitle { get; set; }
-        public List<ReadingBookData> ReadingBookList { get; set; }
-        public List<EndingBookData> EndReadingBookList { get; set; }
+        public ObservableCollection<ReadingBookData> ReadingBookList { get; set; }=new ObservableCollection<ReadingBookData>();
+        public ObservableCollection<EndingBookData> EndReadingBookList { get; set; }=new ObservableCollection<EndingBookData>();
 
         private readonly Dispatcher.Dispatcher dispatcher;
         private BookDataStore bookDataStore;
@@ -29,20 +31,20 @@ namespace TextEditor.ViewModel
             bookDataStore = BookDataStore.Get(dispatcher);
             AddCommand.action = () => actionCreator.Begin(BookTitle);
             EndCommand.action = () => actionCreator.End(BookTitle);
-            bookDataStore.ReadingBookEventHandler += BookDataStoreReadingBookEventHandler;
+            bookDataStore.ReadingBookEventHandler += BookDataStore_ReadingBookEventHandler;
             bookDataStore.EndBookEventHandler += BookDataStore_EndBookEventHandler;
         }
 
-        private void BookDataStore_EndBookEventHandler(List<EndingBookData> books)
+        private void BookDataStore_ReadingBookEventHandler(ReadingBookData books)
         {
-            EndReadingBookList = books;
-            OnPropertyChanged(nameof(EndReadingBookList));
+            ReadingBookList.Add(books);
+            OnPropertyChanged(nameof(ReadingBookList));
         }
 
-        private void BookDataStoreReadingBookEventHandler(List<ReadingBookData> books)
+        private void BookDataStore_EndBookEventHandler(EndingBookData books)
         {
-            ReadingBookList = books;
-            OnPropertyChanged(nameof(ReadingBookList));
+            EndReadingBookList.Add(books);
+            OnPropertyChanged(nameof(EndReadingBookList));
         }
 
         public AddButtonCommand AddCommand = new AddButtonCommand();

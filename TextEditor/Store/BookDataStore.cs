@@ -8,23 +8,27 @@ namespace TextEditor.Store
 {
     public class BookDataStore
     {
-        public delegate void ReadingBookChangeEventHandler(List<ReadingBookData> books);
+        public delegate void ReadingBookChangeEventHandler(ReadingBookData books);
+
         public event ReadingBookChangeEventHandler ReadingBookEventHandler;
-        public delegate void EndBookChangeEventHandler(List<EndingBookData> books);
+
+        public delegate void EndBookChangeEventHandler(EndingBookData books);
+
         public event EndBookChangeEventHandler EndBookEventHandler;
 
         private static BookDataStore instance;
-        private List<ReadingBookData> Readingbooks;
-        private List<EndingBookData> Endbooks;
+        private ReadingBookData Readingbook;
+        private EndingBookData Endbook;
         private readonly Dispatcher.Dispatcher dispacher;
+        private List<ReadingBookData> readingBooks;
 
         private BookDataStore(Dispatcher.Dispatcher dispacher)
         {
             this.dispacher = dispacher;
-            Readingbooks = new List<ReadingBookData>();
-            Endbooks = new List<EndingBookData>();
+            Readingbook = new ReadingBookData();
+            Endbook = new EndingBookData();
+            readingBooks = new List<ReadingBookData>();
             this.dispacher.Action += OnAction;
-
         }
 
         public static BookDataStore Get(Dispatcher.Dispatcher dispatcher)
@@ -38,32 +42,41 @@ namespace TextEditor.Store
             switch(action.GetActionType())
             {
                 case ActionType.Begin:
-                    {
-                        var book = action.GetBookDatas();
-                        var item = new ReadingBookData() { Title = book.Item1, StartTime = book.Item2 };
-                        Readingbooks.Add(item);
-                        ReadingBookEventHandler?.Invoke(Readingbooks);
-                        break;
-                    }
-                case ActionType.End:
-                    {
-                        var book = action.GetBookDatas();
-                        ReadingBookData readingbook = null;
-                        try
-                        {
-                            readingbook = Readingbooks.First(b => book.Item1 == b.Title);
-                        }
-                        catch(NullReferenceException e)
-                        {
-                            System.Console.WriteLine("readingbook null :" + e);
-                        }
+                {
+                    var book = action.GetBookDatas();
+                    var item = new ReadingBookData() {Title = book.Item1, StartTime = book.Item2};
 
-                        var time = book.Item2 - readingbook.StartTime;
-                        var item = new EndingBookData { Title = book.Item1, ReadingTime = time };
-                        Endbooks.Add(item);
-                        EndBookEventHandler?.Invoke(Endbooks);
-                        break;
+                    if(readingBooks.Any(x => x.Title == book.Item1)) return;
+                    if(string.IsNullOrEmpty(item.Title)) return;
+
+                    readingBooks.Add(item);
+                    Readingbook = item;
+                    ReadingBookEventHandler?.Invoke(Readingbook);
+                    break;
+                }
+                case ActionType.End:
+                {
+                    var book = action.GetBookDatas();
+                    if(string.IsNullOrEmpty(book.Item1)) return;
+
+                    TimeSpan time;
+                    var findbook = readingBooks.FirstOrDefault(x => x.Title == book.Item1);
+                    try
+                    {
+                        time = book.Item2 - findbook.StartTime;
                     }
+                    catch(NullReferenceException e)
+                    {
+                        Console.WriteLine("readingbook null :" + e);
+                        return;
+                    }
+
+                    var item = new EndingBookData {Title = book.Item1, ReadingTime = time};
+
+                    Endbook = item;
+                    EndBookEventHandler?.Invoke(Endbook);
+                    break;
+                }
             }
         }
     }
